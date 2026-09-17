@@ -21,7 +21,7 @@ public class DetallePedidoController {
         this.service = service;
     }
 
-    // 1. POST /api/detalles -> agrega un detalle y actualiza pedido.total + producto.stock
+    // 1. POST /api/detalles
     @PostMapping
     public ResponseEntity<DetallePedidoResponse> agregarDetalle(@RequestBody DetallePedidoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.agregarDetalle(request));

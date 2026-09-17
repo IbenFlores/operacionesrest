@@ -33,13 +33,6 @@ public class DetallePedidoService {
         this.productoService = productoService;
     }
 
-    /**
-     * Agrega un detalle de pedido. Dentro de la misma transacción:
-     *   1. Valida que el pedido y el producto existan.
-     *   2. Reduce el stock del producto en la cantidad solicitada (lanza StockInsuficienteException si no alcanza).
-     *   3. Persiste el detalle.
-     *   4. Actualiza el total del pedido sumando (cantidad * precioUnitario).
-     */
     @Transactional
     public DetallePedidoResponse agregarDetalle(DetallePedidoRequest request) {
         if (request.cantidad() == null || request.cantidad() <= 0) {
@@ -57,14 +50,11 @@ public class DetallePedidoService {
                 .orElseThrow(() -> new RecursoNoEncontradoException(
                         "Producto no encontrado con ID: " + request.productoId()));
 
-        // 1. Reducir stock del producto (valida internamente que el stock alcance).
         productoService.reducirStock(producto.getId(), request.cantidad());
 
-        // 2. Crear y guardar el detalle.
         DetallePedido detalle = detalleMapper.aEntidad(pedido, producto, request);
         DetallePedido detalleGuardado = detalleRepository.save(detalle);
 
-        // 3. Actualizar el total del pedido sumando el subtotal del detalle.
         Double subtotalDetalle = detalleGuardado.getCantidad() * detalleGuardado.getPrecioUnitario();
         Double totalActual = pedido.getTotal() == null ? 0.0 : pedido.getTotal();
         pedido.setTotal(totalActual + subtotalDetalle);
