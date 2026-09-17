@@ -1,7 +1,5 @@
 # Pruebas cURL - API REST Pedidos
 
-Documentación de comandos cURL para probar las operaciones de la entidad `Pedido` expuestas en `http://localhost:8080/api/pedidos`.
-
 ---
 
 ## 1. Registrar Nuevo Pedido (POST)
