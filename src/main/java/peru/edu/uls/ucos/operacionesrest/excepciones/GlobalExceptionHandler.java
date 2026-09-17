@@ -19,4 +19,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> manejarDuplicado(RecursoDuplicadoException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", ex.getMessage()));
     }
+
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<Map<String, String>> manejarStockInsuficiente(StockInsuficienteException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> manejarArgumentoInvalido(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+    }
 }

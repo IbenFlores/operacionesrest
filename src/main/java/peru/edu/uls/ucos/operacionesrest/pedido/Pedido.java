@@ -2,30 +2,43 @@ package peru.edu.uls.ucos.operacionesrest.pedido;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name = "pedidos")
+import peru.edu.uls.ucos.operacionesrest.cliente.Cliente;
+
+@Entity
+@Table(name = "pedidos")
 public class Pedido {
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (unique = true)
+    @Column(unique = true)
     private String numeroPedido;
-    @Column 
+
+    @Column
     private Double total;
-    @Column 
+
+    @Column
     private String estado;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
     public Pedido() {}
-    public Pedido(String numeroPedido, Double total, String estado) {
+
+    public Pedido(String numeroPedido, Double total, String estado, Cliente cliente) {
         this.numeroPedido = numeroPedido;
         this.total = total;
         this.estado = estado;
+        this.cliente = cliente;
     }
 
     public Long getId() {
@@ -52,6 +65,10 @@ public class Pedido {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-    
+    public Cliente getCliente() {
+        return cliente;
+    }
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 }

@@ -33,4 +33,10 @@ public class PedidoController {
     public ResponseEntity<List<PedidoResponse>> consultarPorEstado(@PathVariable String estado) {
         return ResponseEntity.ok(pedidoService.consultarPorEstado(estado));
     }
+
+    // 4. GET /api/pedidos/cliente/{clienteId}
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<PedidoResponse>> consultarPorCliente(@PathVariable Long clienteId) {
+        return ResponseEntity.ok(pedidoService.consultarPorCliente(clienteId));
+    }
 }

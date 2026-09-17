@@ -6,4 +6,5 @@ import java.util.List;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     boolean existsByNumeroPedido(String numeroPedido);
     List<Pedido> findByEstadoIgnoreCase(String estado);
+    List<Pedido> findByClienteId(Long clienteId);
 }

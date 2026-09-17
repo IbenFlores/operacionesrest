@@ -1,35 +1,41 @@
 package peru.edu.uls.ucos.operacionesrest.detallepedido;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import peru.edu.uls.ucos.operacionesrest.pedido.Pedido;
-import peru.edu.uls.ucos.operacionesrest.pedido.PedidoRepository; // Ajusta el paquete si cambia
-import peru.edu.uls.ucos.operacionesrest.producto.Producto;
-import peru.edu.uls.ucos.operacionesrest.producto.ProductoRepository; // Ajusta el paquete si cambia
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/detalles")
 public class DetallePedidoController {
 
-    @Autowired
-    private DetallePedidoRepository detalleRepo;
+    private final DetallePedidoService service;
 
-    @Autowired
-    private PedidoRepository pedidoRepo;
+    public DetallePedidoController(DetallePedidoService service) {
+        this.service = service;
+    }
 
-    @Autowired
-    private ProductoRepository productoRepo;
-
+    // 1. POST /api/detalles -> agrega un detalle y actualiza pedido.total + producto.stock
     @PostMapping
-    public DetallePedido guardarDetalle(@RequestParam Long pedidoId, 
-                                        @RequestParam Long productoId, 
-                                        @RequestParam Integer cantidad, 
-                                        @RequestParam Double precio) {
-        
-        Pedido pedido = pedidoRepo.findById(pedidoId).orElseThrow();
-        Producto producto = productoRepo.findById(productoId).orElseThrow();
+    public ResponseEntity<DetallePedidoResponse> agregarDetalle(@RequestBody DetallePedidoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.agregarDetalle(request));
+    }
 
-        DetallePedido detalle = new DetallePedido(pedido, producto, cantidad, precio);
-        return detalleRepo.save(detalle);
+    // 2. GET /api/detalles/{id}
+    @GetMapping("/{id}")
+    public ResponseEntity<DetallePedidoResponse> consultarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.consultarPorId(id));
+    }
+
+    // 3. GET /api/detalles/pedido/{pedidoId}
+    @GetMapping("/pedido/{pedidoId}")
+    public ResponseEntity<List<DetallePedidoResponse>> listarPorPedido(@PathVariable Long pedidoId) {
+        return ResponseEntity.ok(service.listarPorPedido(pedidoId));
     }
 }
